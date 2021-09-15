@@ -2,14 +2,12 @@ package guide.springboot.sample;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -42,7 +40,11 @@ public class TaskController {
         //{ id: }{"id":"1","details":"hi","status":"done"}
 
         //save first!
-        Mytask createdMytask = taskService.save(newTask);
+        if(!StringUtils.hasLength(newTask.getStatus())) {
+            newTask.setStatus("active");
+        }
+        
+        taskService.save(newTask);
 
 
         //1. Return MAP
@@ -55,6 +57,24 @@ public class TaskController {
 
     @PatchMapping(path="/{id}")
     public void updateTask(@PathVariable String id, @RequestBody Mytask updateTask) {
+        Optional<Mytask> optionalMytask = taskService.findById(id);
+        if (optionalMytask.isEmpty()) {
+            return;
+        }
+        Mytask mytask = optionalMytask.get();
 
+        boolean needUpdate = false;
+        if (StringUtils.hasLength(updateTask.getDetails())) {
+            mytask.setDetails(updateTask.getDetails());
+            needUpdate = true;
+        }
+        if (StringUtils.hasLength(updateTask.getStatus())) {
+            mytask.setStatus(updateTask.getStatus());
+            needUpdate = true;
+        }
+
+        if(needUpdate) {
+            taskService.save(mytask);
+        }
     }
 }

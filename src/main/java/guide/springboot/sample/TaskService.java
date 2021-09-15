@@ -3,6 +3,7 @@ package guide.springboot.sample;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -25,4 +26,7 @@ public class TaskService {
         return result;
     }
 
+    public Optional<Mytask> findById(String id) {
+        return taskRepository.findById(id);
+    }
 }

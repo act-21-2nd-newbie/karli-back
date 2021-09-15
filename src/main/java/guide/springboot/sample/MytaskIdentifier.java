@@ -7,16 +7,16 @@ import javax.persistence.Id;
 
 public class MytaskIdentifier {
 
-    private Integer id;
+    private String id;
 
     public MytaskIdentifier(Mytask mytask) {
         this.id = mytask.getId();
     }
-    public MytaskIdentifier(Integer id) {
+    public MytaskIdentifier(String id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 }
