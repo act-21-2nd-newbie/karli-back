@@ -1,15 +1,10 @@
 package guide.springboot.sample;
 
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tasks")
@@ -20,18 +15,15 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-
-/*    ModelAndView viewAll() {
-        final var tasks = taskService.selectAll();
-        final var modelAndView = new ModelAndView();
-        modelAndView.setViewName("tasks/list");
-        final var taskModels = tasks.stream().map(TaskController::toModel).collect(Collectors.toUnmodifiableList());
-        modelAndView.addObject("tasks", taskModels);
-        return modelAndView;
-    }*/
     @GetMapping
     public List<Mytask> getTasks() {
         List<Mytask> result = taskService.getTasks();
+        return result;
+    }
+
+    @GetMapping(path="/{id}")
+    public Optional<Mytask> getTasks(@PathVariable String id) {
+        Optional<Mytask> result = taskService.findById(id);
         return result;
     }
 
@@ -47,7 +39,6 @@ public class TaskController {
 
         taskService.save(newTask);
 
-
         //1. Return MAP
         // Map<String, String> result = new HashMap<>();
         // result.put("id", createdMytask.getId());
@@ -57,10 +48,10 @@ public class TaskController {
     }
 
     @PatchMapping(path="/{id}")
-    public void updateTask(@PathVariable String id, @RequestBody Mytask updateTask) {
+    public Optional<Mytask> updateTask(@PathVariable String id, @RequestBody Mytask updateTask) {
         Optional<Mytask> optionalMytask = taskService.findById(id);
         if (optionalMytask.isEmpty()) {
-            return;
+            return optionalMytask;
         }
         Mytask mytask = optionalMytask.get();
 
@@ -77,10 +68,16 @@ public class TaskController {
         if(needUpdate) {
             taskService.save(mytask);
         }
+        return optionalMytask;
     }
 
     @DeleteMapping
     public void deleteTask(@PathVariable String id) {
+        taskService.delete(id);
+    }
 
+    @DeleteMapping
+    public void deleteTask() {
+        taskService.delete();
     }
 }

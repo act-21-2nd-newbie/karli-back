@@ -15,8 +15,4 @@ public class MytaskIdentifier {
     public MytaskIdentifier(String id) {
         this.id = id;
     }
-
-    public String getId() {
-        return id;
-    }
 }

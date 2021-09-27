@@ -9,7 +9,6 @@ import java.util.Optional;
 public class TaskService {
 
     final TaskRepository taskRepository;
-
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
@@ -28,5 +27,13 @@ public class TaskService {
 
     public Optional<Mytask> findById(String id) {
         return taskRepository.findById(id);
+    }
+
+    public void delete(String id) {
+        taskRepository.deleteById(id);
+    }
+
+    public void delete() {
+        taskRepository.deleteAll();
     }
 }
