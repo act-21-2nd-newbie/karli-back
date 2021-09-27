@@ -15,14 +15,12 @@ public class TaskService {
 
 
     public List<Mytask> getTasks() {
-        List<Mytask> result = taskRepository.findAll();
-        return result;
+        return taskRepository.findAll();
     }
 
 
     public Mytask save(Mytask newTask) {
-        Mytask result = taskRepository.save(newTask);
-        return result;
+        return taskRepository.save(newTask);
     }
 
     public Optional<Mytask> findById(String id) {

@@ -47,8 +47,19 @@ public class TaskController {
         return tid;
     }
 
+    @PutMapping(path="/{id}")
+    public Optional<Mytask> updateTask(@PathVariable String id, @RequestBody Mytask updateTask)
+    {
+        Optional<Mytask> optionalMytask = taskService.findById(id);
+        Mytask mytask = optionalMytask.get();
+        mytask.setDetails(updateTask.getDetails());
+        mytask.setStatus(updateTask.getStatus());
+        taskService.save(mytask);
+        return optionalMytask;
+    }
+
     @PatchMapping(path="/{id}")
-    public Optional<Mytask> updateTask(@PathVariable String id, @RequestBody Mytask updateTask) {
+    public Optional<Mytask> patchTask(@PathVariable String id, @RequestBody Mytask patchTask) {
         Optional<Mytask> optionalMytask = taskService.findById(id);
         if (optionalMytask.isEmpty()) {
             return optionalMytask;
@@ -56,12 +67,12 @@ public class TaskController {
         Mytask mytask = optionalMytask.get();
 
         boolean needUpdate = false;
-        if (StringUtils.hasLength(updateTask.getDetails())) {
-            mytask.setDetails(updateTask.getDetails());
+        if (StringUtils.hasLength(patchTask.getDetails())) {
+            mytask.setDetails(patchTask.getDetails());
             needUpdate = true;
         }
-        if (StringUtils.hasLength(updateTask.getStatus())) {
-            mytask.setStatus(updateTask.getStatus());
+        if (StringUtils.hasLength(patchTask.getStatus())) {
+            mytask.setStatus(patchTask.getStatus());
             needUpdate = true;
         }
 
@@ -71,7 +82,7 @@ public class TaskController {
         return optionalMytask;
     }
 
-    @DeleteMapping
+    @DeleteMapping(path="/{id}")
     public void deleteTask(@PathVariable String id) {
         taskService.delete(id);
     }
