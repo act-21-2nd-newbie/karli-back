@@ -1,5 +1,6 @@
 package guide.springboot.sample;
 
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -43,7 +44,7 @@ public class TaskController {
         if(!StringUtils.hasLength(newTask.getStatus())) {
             newTask.setStatus("active");
         }
-        
+
         taskService.save(newTask);
 
 
@@ -76,5 +77,10 @@ public class TaskController {
         if(needUpdate) {
             taskService.save(mytask);
         }
+    }
+
+    @DeleteMapping
+    public void deleteTask(@PathVariable String id) {
+
     }
 }
