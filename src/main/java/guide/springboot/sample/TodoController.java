@@ -54,18 +54,32 @@ public class TodoController {
 
         return optionalOldTodo;
     }
-    /*
-    @PutMapping()
-    public putTodo() {
 
-    }*/
+    @PatchMapping()
+    public void updateAllTodo(@RequestBody Todo newTodo) {
+        boolean newStatus = newTodo.getStatus();
+
+        List<Todo> allTodos = todoService.getAllTodos();
+        for (Todo oldTodo : allTodos) {
+            oldTodo.setStatus(newStatus);
+            todoService.save(oldTodo);
+        }
+    }
+
     @DeleteMapping("/{id}")
-    public void deleteTodo(@PathVariable Long id) {
+    public void deleteTodo(@PathVariable("id") Long id) {
         todoService.delete(id);
     }
 
     @DeleteMapping
     public void deleteTodos() {
-        todoService.deleteAll();
+        List<Todo> allTodos = todoService.getAllTodos();
+        for (Todo todo : allTodos) {
+            long id = todo.getId();
+            Boolean todoStatus = todo.getStatus();
+            if (todoStatus) {
+                todoService.delete(id);
+            }
+        }
     }
 }
